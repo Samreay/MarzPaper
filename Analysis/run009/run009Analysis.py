@@ -115,7 +115,8 @@ def plotOffset(res):
     
 def plotQop4Comparison(res):
     qop4 = res[res[:,0] >= 4]
-    
+    qSelection = qop4[:,-1] == 12
+    qInvSelection = qSelection == False
     thresh = 0.01
     
     autozNum = 100.0 *  (np.abs(qop4[:,3] - qop4[:,1]) < thresh).sum() / qop4[:,1].size
@@ -140,11 +141,18 @@ def plotQop4Comparison(res):
     ax2 = fig.add_subplot(gs[1,0])
     ax3 = fig.add_subplot(gs[1,1])
     
-    opts = {'alpha':0.3, 's':2}
-    ax0.scatter(qop4[:,4], qop4[:,1], label="Runz xcor: %0.1f%%" % runzXNum, color='#E53935', **opts)
-    ax1.scatter(qop4[:,5], qop4[:,1], label="Runz ELM: %0.1f%%" % runzENum, color='#AB47BC', **opts)
-    ax2.scatter(qop4[:,3], qop4[:,1], label="Autoz: %0.1f%%" % autozNum, color='#4CAF50', **opts)
-    ax3.scatter(qop4[:,2], qop4[:,1], label="Marz: %0.1f%%" % marzNum, color='#2196F3', **opts)
+    opts = {'alpha':0.3}
+    opts2 = {'alpha': 0.6}
+    
+    ax0.plot(qop4[:,4][qInvSelection], qop4[:,1][qInvSelection], '.', markersize=4, label="Runz xcor: %0.1f%%" % runzXNum, color='#E53935', **opts)
+    ax0.plot(qop4[:,4][qSelection], qop4[:,1][qSelection], '+', markersize=7, label="Runz xcor: %0.1f%%" % runzXNum, color='#E53935',  **opts2)
+    ax1.plot(qop4[:,5][qInvSelection], qop4[:,1][qInvSelection], '.', markersize=4, label="Runz ELM: %0.1f%%" % runzENum, color='#AB47BC', **opts)
+    ax1.plot(qop4[:,5][qSelection], qop4[:,1][qSelection], '+', markersize=7, label="Runz ELM: %0.1f%%" % runzENum, color='#AB47BC',  **opts2)
+    ax2.plot(qop4[:,3][qInvSelection], qop4[:,1][qInvSelection], '.', markersize=4, label="Autoz: %0.1f%%" % autozNum, color='#4CAF50', **opts)
+    ax2.plot(qop4[:,3][qSelection], qop4[:,1][qSelection], '+', markersize=7, label="Autoz: %0.1f%%" % autozNum, color='#4CAF50',  **opts2)
+    ax3.plot(qop4[:,2][qInvSelection], qop4[:,1][qInvSelection], '.', markersize=4, label="Marz: %0.1f%%" % marzNum, color='#2196F3', **opts)
+    ax3.plot(qop4[:,2][qSelection], qop4[:,1][qSelection], '+', markersize=7, label="Marz: %0.1f%%" % marzNum, color='#2196F3',  **opts2)
+
     
     xlims = [0, 5]
     ylims = [0, 5]
@@ -187,12 +195,12 @@ def plotQop4Comparison(res):
     figtext(0.35,0.05,"Automatic redshift",fontdict={'fontsize':16})
     figtext(0.03,0.6,"Actual redshift", fontdict={'fontsize':16},rotation=90)
     
-    #fig.savefig("run009Comp.png", bbox_inches='tight', dpi=600, transparent=True)
-    #fig.savefig("run009Comp.pdf", bbox_inches='tight', dpi=1200, transparent=True)
+    fig.savefig("run009Comp.png", bbox_inches='tight', dpi=600, transparent=True)
+    fig.savefig("run009Comp.pdf", bbox_inches='tight', dpi=1200, transparent=True)
 
     
-res = loadData()
-#plotQop4Comparison(res)
-plotOffset(res)
+#res = loadData()
+plotQop4Comparison(res)
+#plotOffset(res)
 
 

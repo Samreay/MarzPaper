@@ -68,7 +68,7 @@ def loadData():
                     idd = i[marzID].strip()
                     if objects.get(idd):
                         objects[idd]['MZ'] = float(i[marzZ])
-                        objects[idd]['MTID'] = i[marzTID].strip()
+                        objects[idd]['MTID'] = int(i[marzTID].strip())
                         objects[idd]['TYPE'] = i[marzT].strip()
                     else:
                         objects[idd] = {'MZ': float(i[marzZ]), 'MTID': i[marzTID].strip(), 'TYPE': i[marzT].strip()}
@@ -78,7 +78,7 @@ def loadData():
     for item in objects:
         i = objects[item]
         if i.get('MZ') is not None and i.get('AZ') is not None and i.get('RZ') is not None and i.get('RXZ') is not None:
-            results.append([i.get('QOP'), i.get('RZ'), i.get('MZ'), i.get('AZ'), i.get('RXZ'), i.get('REZ')])
+            results.append([i.get('QOP'), i.get('RZ'), i.get('MZ'), i.get('AZ'), i.get('RXZ'), i.get('REZ'), i.get("MTID")])
             
     return np.array(results)
     
@@ -88,6 +88,8 @@ def loadData():
     
 def plotQop4Comparison(res):
     qop4 = res[res[:,0] >= 4]
+    qSelection = qop4[:,-1] == 12
+    qInvSelection = qSelection == False
     
     thresh = 0.01
     
@@ -113,11 +115,15 @@ def plotQop4Comparison(res):
     ax2 = fig.add_subplot(gs[1,0])
     ax3 = fig.add_subplot(gs[1,1])
     
-    opts = {'alpha':0.3, 's':2}
-    ax0.scatter(qop4[:,4], qop4[:,1], label="Runz xcor: %0.1f%%" % runzXNum, color='#E53935', **opts)
-    ax1.scatter(qop4[:,5], qop4[:,1], label="Runz ELM: %0.1f%%" % runzENum, color='#AB47BC', **opts)
-    ax2.scatter(qop4[:,3], qop4[:,1], label="Autoz: %0.1f%%" % autozNum, color='#4CAF50', **opts)
-    ax3.scatter(qop4[:,2], qop4[:,1], label="Marz: %0.1f%%" % marzNum, color='#2196F3', **opts)
+    opts = {'alpha':0.3}
+    ax0.plot(qop4[:,4][qInvSelection], qop4[:,1][qInvSelection], '.', markersize=4, label="Runz xcor: %0.1f%%" % runzXNum, color='#E53935', **opts)
+    ax0.plot(qop4[:,4][qSelection], qop4[:,1][qSelection], '+', markersize=10, label="Runz xcor: %0.1f%%" % runzXNum, color='#E53935')
+    ax1.plot(qop4[:,5][qInvSelection], qop4[:,1][qInvSelection], '.', markersize=4, label="Runz ELM: %0.1f%%" % runzENum, color='#AB47BC', **opts)
+    ax1.plot(qop4[:,5][qSelection], qop4[:,1][qSelection], '+', markersize=10, label="Runz ELM: %0.1f%%" % runzENum, color='#AB47BC')
+    ax2.plot(qop4[:,3][qInvSelection], qop4[:,1][qInvSelection], '.', markersize=4, label="Autoz: %0.1f%%" % autozNum, color='#4CAF50', **opts)
+    ax2.plot(qop4[:,3][qSelection], qop4[:,1][qSelection], '+', markersize=10, label="Autoz: %0.1f%%" % autozNum, color='#4CAF50')
+    ax3.plot(qop4[:,2][qInvSelection], qop4[:,1][qInvSelection], '.', markersize=4, label="Marz: %0.1f%%" % marzNum, color='#2196F3', **opts)
+    ax3.plot(qop4[:,2][qSelection], qop4[:,1][qSelection], '+', markersize=10, label="Marz: %0.1f%%" % marzNum, color='#2196F3')
     
     xlims = [0, 1.1]
     ylims = [0, 1.1]
@@ -165,7 +171,7 @@ def plotQop4Comparison(res):
     fig.savefig("2dfComp.pdf", bbox_inches='tight', transparent=True)
 
     
-res = loadData()
+#res = loadData()
 plotQop4Comparison(res)
 
 
