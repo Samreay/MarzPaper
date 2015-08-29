@@ -98,7 +98,11 @@ def plotErrorRate(res):
     c4 = 1549.06;
     vals = [halpha, hbeta, o2, lya, mg2, c3, o3d, c4]
     
+<<<<<<< HEAD
     qop4 = res[res[:,0] >= 4]
+=======
+    qop4 = res[res[:,0] >= 3]
+>>>>>>> origin/master
     
     qSelection = qop4[:,-1] == 12
     qInvSelection = qSelection == False
