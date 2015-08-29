@@ -39,7 +39,7 @@ class Fitted(object):
         
 class ThresholdFitter(Fitted):
     def __init__(self):
-        self.params = [('sub', 0, 3, 'sub'), ('pow', 0, 2, 'pow'), ('q2', 0, 5, 'q2'), ('q3', 0, 10, 'q3'), ('q4', 0, 15, 'q4')]
+        self.params = [('sub', 0, 5, 'sub'), ('pow', 0, 2, 'pow'), ('q2', 0, 5, 'q2'), ('q3', 0, 10, 'q3'), ('q4', 0, 15, 'q4')]
         self.res = self.loadData()
         self.qops = [4,3,2,1]
         self.colours = ["#4CAF50", "#2196F3", "#E5A9A5", "#E53935", "#673AB7"]
@@ -118,9 +118,9 @@ class ThresholdFitter(Fitted):
             if p < allParams[i][1] or p > allParams[i][2]:
                 return None
         data = [(x[:,1]-params[0])**params[1] * (x[:,1]/x[:,2]) for x in self.qopArr]        
-        print(x[:,1])
-        print(x[:,2])
-        print("ARGH")
+        #print(x[:,1])
+        #print(x[:,2])
+        #print("ARGH")
         b2 = params[2]
         b3 = params[3]
         b4 =  params[4]
@@ -131,18 +131,20 @@ class ThresholdFitter(Fitted):
         qop1Vals = data[3]
 
 
-        chi2 = - 1.0 * (qop4Vals > b4).sum()/qop4Vals.size     +  10.0 * (qop3Vals > b4).sum()/qop3Vals.size  + 50.0 *  (qop2Vals > b4).sum()/qop2Vals.size + 100.0 * (qop1Vals > b4).sum()/qop1Vals.size 
-        
+        qop4chi2 = - 5.0 * (qop4Vals > b4).sum()/qop4Vals.size     +  10.0 * (qop3Vals > b4).sum()/qop3Vals.size  + 50.0 *  (qop2Vals > b4).sum()/qop2Vals.size + 100.0 * (qop1Vals > b4).sum()/qop1Vals.size 
+        qop3chi2 = - 3.0 * (qop3Vals > b3).sum()/qop3Vals.size + ((qop4Vals > b3) & (qop4Vals < b4)).sum()/qop4Vals.size + 5.0 * (qop2Vals > b3).sum()/qop2Vals.size + 10 * (qop1Vals > b3).sum()/qop1Vals.size
+        qop2chi2 = - 1.0 * ((qop2Vals > b2) & (qop2Vals < b3)).sum()/qop2Vals.size + 5.0 * ((qop3Vals > b2) & (qop3Vals < b3)).sum()/qop3Vals.size + 10 * ((qop4Vals > b2) & (qop4Vals < b3)).sum()/qop4Vals.size    
+        qop1chi2 = - 1.0 * ((qop1Vals < b2)).sum()/qop1Vals.size  + 2 * (qop2Vals < b2).sum()/qop2Vals.size + 5 * (qop3Vals < b2).sum()/qop3Vals.size + 10 * (qop4Vals < b2).sum()/qop4Vals.size
         #chi2 = (data[0] < b1).sum()/(1.0*data[0].size) +  1.3 * (data[1] > b1).sum()/(1.0*data[1].size) + (data[1] < b2).sum()/(1.0*data[1].size) +  1.2*(data[2] > b2).sum()/(1.0*data[2].size) + 0.2 * (data[2] < b3).sum()/(1.0*data[2].size) +  1.4*(data[3] > b2).sum()/(1.0*data[3].size) + 0.1*(data[3] > b3).sum()/(1.0*data[3].size)
-        print(b4)
-        print(qop4Vals)        
-        print(chi2)
-        print(1.0 * (qop4Vals > b4).sum()/qop4Vals.size)
-        print(10.0 * (qop3Vals > b4).sum()/qop3Vals.size)
-        print(50.0 *  (qop2Vals > b4).sum()/qop2Vals.size)
-        print(100.0 * (qop1Vals > b4).sum()/qop1Vals.size)
-        raise Exception("fuck")
-        return chi2*100
+        #print(b4)
+        #print(chi2)
+        #print(1.0 * (qop4Vals > b4).sum()/qop4Vals.size)
+        #print(10.0 * (qop3Vals > b4).sum()/qop3Vals.size)
+        #print(50.0 *  (qop2Vals > b4).sum()/qop2Vals.size)
+        #print(100.0 * (qop1Vals > b4).sum()/qop1Vals.size)
+        #raise Exception("fuck")
+        chi2 = 1.5*qop4chi2 + qop3chi2 + 0.5*qop2chi2 + 0.25*qop1chi2   
+        return chi2
     
 class CambMCMCManager(object):
     def __init__(self, uid, fitter, debug=False):
@@ -246,7 +248,7 @@ class CambMCMCManager(object):
         string += "\\end{align}\n"
         print(string)
         return res
-    
+
     def plotWalk(self, param1, param2, final=True, size=(13,9)):
         
         fig = plt.figure(figsize=size, dpi=300)
@@ -278,7 +280,7 @@ class CambMCMCManager(object):
         ax0.set_xlabel(param)
         ax0.set_ylabel("Counts")
         
-    def plotResults(self, size=(11,11), filename=None, useGaussianKernelDensityEstimation=False):
+    def plotResults(self, size=(20,20), filename=None, useGaussianKernelDensityEstimation=False):
         fig = plt.figure(figsize=size, dpi=300)
         matplotlib.rcParams.update({'font.size': 14})
         matplotlib.rcParams['axes.labelsize'] = 20
@@ -657,12 +659,12 @@ if __name__ == '__main__':
     finalFitter = ThresholdFitter()
     text = "thresholdMCMC"
        
-    cambMCMCManager = CambMCMCManager(text, finalFitter, debug=True)
-    cambMCMCManager.configureMCMC(numCalibrations=9,calibrationLength=500, thinning=1, maxSteps=15000)
+    cambMCMCManager = CambMCMCManager(text, finalFitter, debug=False)
+    cambMCMCManager.configureMCMC(numCalibrations=9,calibrationLength=500, thinning=1, maxSteps=50000)
     cambMCMCManager.configureSaving(stepsPerSave=5000)
     args = sys.argv
     walk = None
-    walk = 1
+    #walk = 5
     outputToFile = False
     if len(args) > 1:
         try:

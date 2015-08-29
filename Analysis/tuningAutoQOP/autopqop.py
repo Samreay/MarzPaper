@@ -11,7 +11,7 @@ from pylab import *
 def loadData():
     directory = os.path.dirname(os.path.realpath(__file__))
     
-    marzDir = os.path.join(directory, 'marz')
+    marzDir = os.path.join(directory, 'marz_new')
     autozDir = os.path.join(directory, 'autoz')
     runzDir = os.path.join(directory, 'runz')
     
@@ -104,6 +104,11 @@ def plotErrorRate(res):
     qop1ratio = 100.0 * np.array([(qop1[:,6] == x).sum() for x in possible]) / qop1[:,6].size
     qop6ratio = 100.0 * np.array([(qop6[:,6] == x).sum() for x in possible]) / qop6[:,6].size
     
+    print(qop4ratio)
+    print(qop3ratio)
+    print(qop2ratio)
+    print(qop1ratio)
+    print(qop6ratio)
     fig = plt.figure(figsize=(7,7), dpi=300)
     matplotlib.rcParams.update({'font.size': 12})
     #matplotlib.rcParams['axes.labelsize'] = 20
@@ -122,12 +127,12 @@ def plotErrorRate(res):
     plt.xticks(ind + 0.5, ('1','2','3','4','6'))
     ax.set_xlabel("Marz estimated QOP", fontsize=14)
     ax.set_ylabel("Assignment chance [%]", fontsize=14)
-    ax.legend(loc="upper left")
+    ax.legend(loc="upper right")
     
 
     
     #fig.savefig("autoQOP.png", bbox_inches='tight', dpi=600, transparent=True)
-    #fig.savefig("autoQOP.pdf", bbox_inches='tight', transparent=True)
+    fig.savefig("autoQOP.pdf", bbox_inches='tight', transparent=True)
     
     
     
