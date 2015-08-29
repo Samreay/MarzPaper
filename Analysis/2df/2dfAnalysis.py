@@ -1,6 +1,6 @@
 import os
 import numpy as np
-import asciitable
+from astropy.io import ascii
 
 import matplotlib, matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -33,7 +33,7 @@ def loadData():
     
     for filename in os.listdir(autozDir):
         with open(os.path.join(autozDir, filename), 'r') as f:
-            data = asciitable.read(f.read())
+            data = ascii.read(f.read())
             for i in data:
                 key = i[autozID]
                 if objects.get(key):
@@ -91,12 +91,12 @@ def plotQop4Comparison(res):
     qSelection = qop4[:,-1] == 12
     qInvSelection = qSelection == False
     
-    thresh = 0.01
+    thresh = 0.0015
     
-    autozNum = 100.0 *  (np.abs(qop4[:,3] - qop4[:,1]) < thresh).sum() / qop4[:,1].size
-    marzNum  = 100.0 *  (np.abs(qop4[:,2] - qop4[:,1]) < thresh).sum() / qop4[:,1].size
-    runzXNum = 100.0 *  (np.abs(qop4[:,4] - qop4[:,1]) < thresh).sum() / qop4[:,1].size
-    runzENum = 100.0 *  (np.abs(qop4[:,5] - qop4[:,1]) < thresh).sum() / qop4[:,1].size
+    autozNum = 100.0 *  (np.abs(np.log(1+qop4[:,3]) - np.log(1+qop4[:,1])) < thresh).sum() / qop4[:,1].size
+    marzNum  = 100.0 *  (np.abs(np.log(1+qop4[:,2]) - np.log(1+qop4[:,1])) < thresh).sum() / qop4[:,1].size
+    runzXNum = 100.0 *  (np.abs(np.log(1+qop4[:,4]) - np.log(1+qop4[:,1])) < thresh).sum() / qop4[:,1].size
+    runzENum = 100.0 *  (np.abs(np.log(1+qop4[:,5]) - np.log(1+qop4[:,1])) < thresh).sum() / qop4[:,1].size
     
     fig = plt.figure(figsize=(7,7), dpi=300)
     matplotlib.rcParams.update({'font.size': 12})
@@ -117,13 +117,13 @@ def plotQop4Comparison(res):
     
     opts = {'alpha':0.3}
     ax0.plot(qop4[:,4][qInvSelection], qop4[:,1][qInvSelection], '.', markersize=4, label="Runz xcor: %0.1f%%" % runzXNum, color='#E53935', **opts)
-    ax0.plot(qop4[:,4][qSelection], qop4[:,1][qSelection], '+', markersize=10, label="Runz xcor: %0.1f%%" % runzXNum, color='#E53935')
+    ax0.plot(qop4[:,4][qSelection], qop4[:,1][qSelection], '.', markersize=4, label="Runz xcor: %0.1f%%" % runzXNum, color='#E53935')
     ax1.plot(qop4[:,5][qInvSelection], qop4[:,1][qInvSelection], '.', markersize=4, label="Runz ELM: %0.1f%%" % runzENum, color='#AB47BC', **opts)
-    ax1.plot(qop4[:,5][qSelection], qop4[:,1][qSelection], '+', markersize=10, label="Runz ELM: %0.1f%%" % runzENum, color='#AB47BC')
+    ax1.plot(qop4[:,5][qSelection], qop4[:,1][qSelection], '.', markersize=4, label="Runz ELM: %0.1f%%" % runzENum, color='#AB47BC')
     ax2.plot(qop4[:,3][qInvSelection], qop4[:,1][qInvSelection], '.', markersize=4, label="Autoz: %0.1f%%" % autozNum, color='#4CAF50', **opts)
-    ax2.plot(qop4[:,3][qSelection], qop4[:,1][qSelection], '+', markersize=10, label="Autoz: %0.1f%%" % autozNum, color='#4CAF50')
+    ax2.plot(qop4[:,3][qSelection], qop4[:,1][qSelection], '.', markersize=4, label="Autoz: %0.1f%%" % autozNum, color='#4CAF50')
     ax3.plot(qop4[:,2][qInvSelection], qop4[:,1][qInvSelection], '.', markersize=4, label="Marz: %0.1f%%" % marzNum, color='#2196F3', **opts)
-    ax3.plot(qop4[:,2][qSelection], qop4[:,1][qSelection], '+', markersize=10, label="Marz: %0.1f%%" % marzNum, color='#2196F3')
+    ax3.plot(qop4[:,2][qSelection], qop4[:,1][qSelection], '.', markersize=4, label="Marz: %0.1f%%" % marzNum, color='#2196F3')
     
     xlims = [0, 1.1]
     ylims = [0, 1.1]
@@ -171,7 +171,7 @@ def plotQop4Comparison(res):
     fig.savefig("2dfComp.pdf", bbox_inches='tight', transparent=True)
 
     
-#res = loadData()
+res = loadData()
 plotQop4Comparison(res)
 
 

@@ -1,6 +1,6 @@
 import os
 import numpy as np
-import asciitable
+from astropy.io import ascii
 
 import matplotlib, matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -33,7 +33,7 @@ def loadData():
     
     for filename in os.listdir(autozDir):
         with open(os.path.join(autozDir, filename), 'r') as f:
-            data = asciitable.read(f.read())
+            data = ascii.read(f.read())
             for i in data:
                 key = i[autozID]
                 if objects.get(key):
@@ -117,12 +117,14 @@ def plotQop4Comparison(res):
     qop4 = res[res[:,0] >= 4]
     qSelection = qop4[:,-1] == 12
     qInvSelection = qSelection == False
-    thresh = 0.01
+    thresh = 0.0015
+    threshQ = 2
+    threshes = thresh * (1 + qSelection * (threshQ - 1))
     
-    autozNum = 100.0 *  (np.abs(qop4[:,3] - qop4[:,1]) < thresh).sum() / qop4[:,1].size
-    marzNum  = 100.0 *  (np.abs(qop4[:,2] - qop4[:,1]) < thresh).sum() / qop4[:,1].size
-    runzXNum = 100.0 *  (np.abs(qop4[:,4] - qop4[:,1]) < thresh).sum() / qop4[:,1].size
-    runzENum = 100.0 *  (np.abs(qop4[:,5] - qop4[:,1]) < thresh).sum() / qop4[:,1].size
+    autozNum = 100.0 *  (np.abs(np.log(1+qop4[:,3]) - np.log(1+qop4[:,1])) < threshes).sum() / qop4[:,1].size
+    marzNum  = 100.0 *  (np.abs(np.log(1+qop4[:,2]) - np.log(1+qop4[:,1])) < threshes).sum() / qop4[:,1].size
+    runzXNum = 100.0 *  (np.abs(np.log(1+qop4[:,4]) - np.log(1+qop4[:,1])) < threshes).sum() / qop4[:,1].size
+    runzENum = 100.0 *  (np.abs(np.log(1+qop4[:,5]) - np.log(1+qop4[:,1])) < threshes).sum() / qop4[:,1].size
     
     fig = plt.figure(figsize=(7,7), dpi=300)
     matplotlib.rcParams.update({'font.size': 12})
@@ -199,7 +201,7 @@ def plotQop4Comparison(res):
     fig.savefig("run009Comp.pdf", bbox_inches='tight', dpi=1200, transparent=True)
 
     
-#res = loadData()
+res = loadData()
 plotQop4Comparison(res)
 #plotOffset(res)
 
