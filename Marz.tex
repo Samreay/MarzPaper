@@ -84,7 +84,7 @@ In this section, we detail the FITS file format that can be consumed by \marz{}.
 If the \textit{fibres} extension exists, it should be as a binary table of $n$ rows. \marz{} searches for the columns TYPE, NAME, RA, DEC, MAGNITUDE and COMMENT. Spectra marked with types other than `P' are removed from analysis, and spectra marked with the comment `PARKED' are also removed. Priors can be enforced by specifying an object type in the comment field, and the effect of object type per template can be modified in the \verb;templates.js;, where the property \verb;weights; is used to map object types to numeric weights.\\
 
 
-\marz{} does not require each intensity value to have a specific wavelength. The wavelength of the input spectra are determined from the primary header, where the Angstrom wavelength \verb;CRVAL1; located at pixel \verb;CRPIX1; is used to calculate the wavelengths for all pixels, given a pixel wavelength separation given by either \verb;CDELT1; or \verb;CD1_1;. Support for log-linear wavelengths can be added on request. {\red I want to do this though}. The spectra is further assumed to have undergone heliocentric velocity correction and the wavelengths given are in air wavelengths and have not been vacuum shifted.\\
+\marz{} does not require each intensity value to have a specific wavelength. The wavelength of the input spectra are determined from the primary header, where the Angstrom wavelength \verb;CRVAL1; located at pixel \verb;CRPIX1; is used to calculate the wavelengths for all pixels, given a pixel wavelength separation given by either \verb;CDELT1; or \verb;CD1_1;. Support for log-linear wavelengths can be added on request. {\red Is this something I should do?}. The spectra is further assumed to have undergone heliocentric velocity correction and the wavelengths given are in air wavelengths and have not been vacuum shifted.\\
 
 Example FITS files can be downloaded on the \textit{Usage} section of the \marz{} application.
 
@@ -280,6 +280,7 @@ In addition to the QOP4 successful recovery rates, a normalised probability dist
 
 
 
+
 \section{Interactive Interface}
 
 The interactive interface consists currently five primary screens: the overview, detailed, templates, settings, and usage screen. The first two screens - the overview and detailed screens, are where users will spend the vast majority of their time, and thus screenshots of them have been provided in Figures \ref{fig:overview} and \ref{fig:detailed}. The overview screen provides users with a high level view of the spectra in the loaded FITS file, detailing what they have been matched to and the quality assigned to the matches. Filtering for this screen allows users to sort results or to filter by categories, for example only displaying matches of quality (QOP) 4 or all matches to quasar templates. Comma-separated variable (CSV) output in the form of previously downloaded \marz{} results files can be loaded into the program in the same drag-and-drop manner as FITS files, allowing easy verification of redshift results by different users on different machines. A progress bar at the top of the screen keep track of current file completion and file quality.\\
@@ -311,7 +312,9 @@ Two main error safeguards have been implemented in the program to stop unnecessa
 
 
 
+\section{Command Line Interface}
 
+A command line interface has also been developed for \marz{}. It requires IO.js\footnote{\url{https://iojs.org/en/}} to be installed, and two IO.js dependencies are installed when running \verb;install.sh; - file-api\footnote{\url{https://github.com/node-file-api/file-api}} and JsDOM\footnote{\url{https://github.com/tmpvar/jsdom}}. The run script \verb;autoMarz.sh; takes a minimum single argument - the name of the FITS file to match. More detailed usage instructions and command line parameters are detailed in the project Github readme\footnote{\url{https://github.com/samreay/Marz}}. 
 
 
 
