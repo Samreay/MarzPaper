@@ -162,6 +162,21 @@ As the sharp features of the general templates are enhanced by smoothing, the ge
 The general spectrum then has error adjustment applied, where each pixel has its variance set to the maximal value of itself and the variance of its two neighbouring pixels. Following \citet{baldry2014galaxy}, this is to allow for uncertainty in the sky subtraction and any underestimation of errors next to sky lines. The variance spectrum is then widened again, where each pixel is set to a maximum of its original value or 70\% of a thirteen pixel median filter, which serves to remove from the variance any points of sufficiently low variance that division of the intensity by the variance would create a fake emission feature. Numerical values chosen mirror those used in the GAMA survey. The intensity of the general spectrum is divided by the variance spectrum to down-weight pixels with higher uncertainty. 
 
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=\columnwidth]{autoqop.pdf}
+\caption{The probability of \marz{} assigning a suggested quality differentiated by the quality assigned by a human redshifter. Importantly, a QOP1 spectrum and a QOP2 spectrum respectively have a 0.8\%  and 1.4\% chance of being classified as a QOP4 spectra. However, these mismatches are primarily due to errors in the data reduction process which introduce false features. From the data analysed, 37\% of actual QOP4 spectra are classified as QOP3, where the automatic QOP algorithm has assigned a lower value due to the presence of a strong secondary peak in the cross correlation values, an occurrence illustrated in Figure \ref{fig:xcors}.}
+\label{fig:autoqop}
+\end{figure}
+
+
+\begin{figure*}[h!]
+\centering
+\includegraphics[width=\textwidth]{templates.pdf}
+\caption{A visual display of the twelve templates currently in \marz{}, displayed after continuum subtraction.}
+\label{fig:templates}
+\end{figure*}
+
 
 
 
@@ -174,7 +189,9 @@ Both the general and the quasar spectrum undergo cosine tapering and root-mean-s
 \end{align}
 The values for $\alpha$, $\beta$ and the FOM cut offs shown in \eqref{eq:autoqop2} were informed off a likelihood distribution created to minimise the weighted number of misclassification, where a misclassified QOP4 spectrum (99.9\% confidence) was weighted ten times as much as a misclassified QOP3 spectrum (95\% confidence), and so on for QOP2 spectra (signal present but unsure of type and/or redshift) and QOP1 (no confidence). Parameters $\alpha$, $\beta$ and the FOM cutoff for each QOP were set as free variables in a Markov Chain Monte Carlo simulation, and the approximate maximum likelihood of the marginalised distributions were selected as final values, such that $\alpha = 2.5$, $\beta = 0.75$ and the FOM boundaries are as given in \eqref{eq:autoqop2}.
 \begin{align}
-{\rm FOM} &= (v_1-2.5)^{0.75} \times \frac{v_1}{v_2} \label{eq:autoqop3}\\
+{\rm FOM} &= (v_1-2.5)^{0.75} \times \frac{v_1}{v_2} \label{eq:autoqop3}
+\end{align}
+\begin{align}
 {\rm QOP} &= \begin{cases}6 & \text{if } {\rm FOM} > 4.5 \text{ and fit to a stellar template} \label{eq:autoqop2}\\
 4 & \text{if } {\rm FOM} > 8.5  \\
 3 & \text{if } {\rm FOM} > 4.5 \\
@@ -183,12 +200,10 @@ The values for $\alpha$, $\beta$ and the FOM cut offs shown in \eqref{eq:autoqop
 \end{align}
 This suggested QOP is not meant to replace human quality flags, but simply give the redshifter an estimate of spectrum quality before and during manual verification of the automatic result. The probability of agreement with a human redshifter is illustrated in Figure \ref{fig:autoqop}. The suggested QOP is computed from first calculating a Figure of Merit (FOM) from the cross correlation results.
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=\columnwidth]{autoqop.pdf}
-\caption{The probability of \marz{} assigning a suggested quality differentiated by the quality assigned by a human redshifter. Importantly, a QOP1 spectrum and a QOP2 spectrum respectively have a 0.8\%  and 1.4\% chance of being classified as a QOP4 spectra. However, these mismatches are primarily due to errors in the data reduction process which introduce false features. From the data analysed, 37\% of actual QOP4 spectra are classified as QOP3, where the automatic QOP algorithm has assigned a lower value due to the presence of a strong secondary peak in the cross correlation values, an occurrence illustrated in Figure \ref{fig:xcors}.}
-\label{fig:autoqop}
-\end{figure}
+
+
+
+
 
 
 \begin{figure*}[t]
@@ -204,17 +219,10 @@ This suggested QOP is not meant to replace human quality flags, but simply give 
 
 
 
-
 \section{Template Selection}
 
 
 
-\begin{figure*}[h!]
-\centering
-\includegraphics[width=\textwidth]{templates.pdf}
-\caption{A visual display of the twelve templates currently in \marz{}, displayed after continuum subtraction.}
-\label{fig:templates}
-\end{figure*}
 
 
 It is common in automated matching systems to compare the input spectrum with a large number of templates. The templates found in \marz{} were sourced from original templates from 2dF \citep{colless2001}, WiggleZ \citep{Drinkwater21012010}, the Gemini Deep Deep Survey \citet{abraham2004}, and \autoz{} \citep{baldry2014galaxy}, where the templates in \autoz{}  consist of galaxy eigenspectra from \citet{bolton2012} and stellar spectra from SDSS DR2 \citep{SubbaRao2002}. These templates were sorted, compared, and a selection of twelve representative templates were extracted, consisting of 5 stellar templates, 1 AGN template and 6 galactic templates. Inclusion of a greater number of templates was found to have a minimal impact on matching performance. Whilst extra target types can be added in the future, there are three challenges for \marz{} when attempting to handle a large number of templates. Firstly, users desired to be able to fully replicate the matching capacity of the automatic system when manually redshifting, and a large number of templates complicates the user interface and slows down the process of the user assigning an object type to the spectrum. It would be possible to only display to the user a restricted set of templates, however user feedback indicated this was an undesired solution. Due to the interpreted nature of Javascript and its lack of vector processing capability, computational performance is roughly an order of magnitude worse than on typical compiled code. As the computation time for each spectrum was roughly proportional to the number of templates to match, the number of templates was also kept relatively small to ensure that the automatic matching performance was still acceptable on low-end machines. The final concern when adding more templates is the download size of the web application, such that the size of the template dependency remains small enough to be easily redownloaded on page refresh. A potential solution to this is to enable javascript caching of the template file, such that it only needs to be downloaded once.
@@ -247,17 +255,13 @@ It is common in automated matching systems to compare the input spectrum with a 
 
 
 
-
-
-
-
 \section{Matching Performance}
 
 Performance testing for \marz{} was conducted by looking at two sets of distinct data - one from the OzDES team with low signal-to-noise data at high redshift, and one from the 2dFLenS team with medium signal-to-noise data. In both cases, manual redshifting was performed by experienced redshifters in \runz{}, and the automatic matches produced by \runz{} and the automatic results returned by \marz{} were compared to the manually assigned redshift for all results assigned a QOP of 4. Comparisons were also made with the \autoz{} program, which is the software being used for the GAMA survey and also being adopted by the 2dFLenS team. These surveys have a smaller number of object types and smaller redshift ranges than OzDES, and therefore have simpler requirements for the redshifting software. These high and low signal-to-noise results are shown in Figures \ref{fig:high} and \ref{fig:low}. The redshifting accuracy of \marz{} for high signal-to-noise data gave the correct redshift for 97.4\% of QOP4 spectra, a failure rate far less than that offered by \runz{} and comparable to \autoz{}. For the low signal-to-noise (high redshift) OzDES data, the accuracy of \marz{} was $\approx 92$\%. This is in comparison to the best \runz{} algorithm giving a total accuracy of 54.6\%. The lower success rate of \autoz, 48.0\%, is because the redshift ranges and object types found in the OzDES data are outside the matching capacity of \autoz{}.\\
 
 In addition to the QOP4 successful recovery rates, we can check for matching failures by creating a normalised probability distribution describing the likelihood for spectral line misclassification. This has been done for QOP 4 results, in Figure \ref{fig:f4}. Commonly misidentified spectral lines are labelled in the figure, and can be seen to be a primary source of misclassification across all algorithms. The common [O$_{\mathrm{II}}$]/[O$_{\mathrm{III}}$] misclassification is strongly present in the \marz{} failure rates, however its significance drops to approximately 10\% of the total failure rate when only QOP4 misclassifications are considered, with the majority of the total failure rate of 4.1\% centered around 1. Whilst the expected failure rate for QOP 3 redshifts is ten times higher than for QOP 4 values, this still warrants extra investigation into whether this is a deficiency in the matching algorithm or an effect of the reluctance of human redshifters to assign a QOP 4 quality to spectra matching only on the singular O$_{\rm{II}}$ feature. If there is an algorithmic deficiency, down weighting of high redshift O$_{\rm{II}}$ matches could be implemented to reduce the misclassification rate. Commonly misclassified features are also visible on Figure \ref{fig:high} and \ref{fig:low} as linear relationships off the diagonal.\\
 
-We checked \marz{} for any systematic redshift offset by comparing the redshift result obtained in \marz{} against results obtained by using different, well tested software - \runz{} and \autoz{}. The redshift distribution found is shown in Figure \ref{fig:systematic}. The mean and median redshift offset from \marz{} ($4\times10^{-5}$ and $5\times10^{-6}$ respectively) are comparable to the offsets found with \autoz{}, and do not show any sign of a systematic offset. The variance in redshift results found in \marz{} ($\approx 3 \times 10^{-4}$) is also comparable to \autoz{}, and within the expected variance for AGN and galaxy targets (determined by repeated observation of the same target) of $\Delta z/(1+z) = 0.0015$ and $\Delta z/(1+z) = 0.0005$ respectively \citep{fang2015}.\\
+We checked \marz{} for any systematic redshift offset by comparing the redshift result obtained in \marz{} against results obtained by using different, well tested software - \runz{} and \autoz{}. The redshift distribution found is shown in Figure \ref{fig:systematic}. The mean and median redshift offset from \marz{} ($4\times10^{-5}$ and $5\times10^{-6}$ respectively) are comparable to the offsets found with \autoz{}, and do not show any sign of a systematic offset. The variance in redshift results found in \marz{} ($\approx 3 \times 10^{-4}$) is also comparable to \autoz{}, and within the expected variance for AGN and galaxy targets (determined by repeated observation of the same target) of $\Delta z/(1+z) = 0.0015$ and $\Delta z/(1+z) = 0.0005$ respectively \citep{fang2015}. Due to the redshift variance between observations dominating any uncertainty in an individual match, \marz{} does not assign uncertainty to redshift results. Instead, uncertainty will be determined based on object type and the results of repeated observations, which is detailed in \citet[Table 4]{fang2015}.\\
 
 
 

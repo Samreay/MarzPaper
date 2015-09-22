@@ -30,7 +30,7 @@ templateLambdas = data[0, :]
 templateSpec = data[1, :]
 templateSpec /= templateSpec.max()
 
-fig = plt.figure(figsize=(15,8), dpi=300)
+fig = plt.figure(figsize=(15,6), dpi=300)
 matplotlib.rcParams.update({'font.size': 14})
 matplotlib.rcParams['axes.labelsize'] = 16
 rc('text', usetex=False)
@@ -39,7 +39,7 @@ matplotlib.rcParams['ytick.labelsize'] = 14
 
 gs = gridspec.GridSpec(105, 1)
 gs.update(wspace=0.125, hspace=0) 
-ax0 = fig.add_subplot(gs[0:35])
+ax0 = fig.add_subplot(gs[0:30])
 ax1 = fig.add_subplot(gs[45:65])
 ax2 = fig.add_subplot(gs[65:85], sharex=ax1)
 ax3 = fig.add_subplot(gs[85:105], sharex=ax1)
