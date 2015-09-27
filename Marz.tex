@@ -14,7 +14,7 @@
 \newcommand{\runz}{\textsc{runz}}
 \newcommand{\autoz}{\textsc{autoz}}
 \newcommand{\marz}{\textsc{Marz}}
-
+\newcommand{\angstrom}{\mbox{\normalfont\AA}}
 \shorttitle{Manual and Automatic Redshifting Software}
 \shortauthors{S. R. Hinton et al.}
 
@@ -91,9 +91,9 @@ In this section, we detail the FITS file format that can be consumed by \marz{}.
 If the \textit{fibres} extension exists, it should be as a binary table of $n$ rows. \marz{} searches for the columns TYPE, NAME, RA, DEC, MAGNITUDE and COMMENT. Spectra marked with types other than `P' are removed from analysis (so as to not analyse fibres used for sky subtraction or calibration), and spectra marked with the comment `PARKED' are also removed. Priors can be enforced by specifying an object type in the comment field, and the effect of object type per template can be modified in the \verb;templates.js;, where the property \verb;weights; is used to map object types to numeric weights. These priors are used to increase or decrease the weight of specific templates for specific object types; as an example the type `AGN\_reverberation' is weighted to increase matching strength against the quasar template.\\
 
 
-\marz{} does not require each intensity value to have a specific wavelength. The wavelength of the input spectra are determined from the primary header, where the Angstrom wavelength \verb;CRVAL1; located at pixel \verb;CRPIX1; is used to calculate the wavelengths for all pixels, given a pixel wavelength separation given by either \verb;CDELT1; or \verb;CD1_1;. Support for log-linear wavelengths can be added on request. {\red Something I will do once I get thesis finalised}. The spectra are further assumed to have undergone heliocentric velocity correction, and the wavelengths defined by the header values above are assumed to be in air wavelengths that have not been vacuum shifted.\\
+\marz{} does not require each intensity value to have a specific wavelength. The wavelength of the input spectra can be determined in multiple ways. \marz{} will search for an image extension named \textit{wavelength}, and if the extension exists, the image data will be loaded as wavelengths. The data can take an $m\times n$ format or simply be an array of length $m$ (similar to the sky data). If the extension is not found, \marz{} will check the primary header for cards with which to construct the wavelength array. The array is constructed such that a reference wavelength \verb;CRVAL1; (corresponding to pixel \verb;CRPIX1;) with linear pixel separation (either \verb;CDELT1; or \verb;CD1_1;) can be used to create a linear array of wavelength values. The wavelengths can be present in linear form (units of Angstroms), or if flag \verb;LOGSCALE; is set in the primary header, wavelength values are taken to be $\log_{10}(\lambda)$, such that a pixel value of $3$ would correspond to $1000\angstrom$. By default, \marz{} assumes the wavelengths presented are taken in air and will thus shift them into a vacuum reference frame. If this has already been done, \verb;VACUUM; can be set and \marz{} will not vacuum shift the input wavelengths. The spectra is further assumed to have undergone heliocentric velocity correction.\\
 
-Example FITS files can be downloaded on the \textit{Usage} section of the \marz{} application.
+Example FITS files can be downloaded on the \textit{Usage} section of the \marz{} application to provide file examples for the above specifications.
 
 
 
