@@ -98,41 +98,8 @@ def plotErrorRate(res):
     c4 = 1549.06;
     vals = [halpha, hbeta, o2, lya, mg2, c3, o3d, c4]
     
-<<<<<<< HEAD
-    qop4 = res[res[:,0] >= 4]
-=======
-    qop4 = res[res[:,0] >= 3]
->>>>>>> origin/master
-    
-    qSelection = qop4[:,-1] == 12
-    qInvSelection = qSelection == False
-    thresh = 0.0015 * 5
-    threshQ = 1
-    threshes = thresh * (1 + qSelection * (threshQ - 1))
-    
-    autozNum =  (np.abs(np.log(1+qop4[:,3]) - np.log(1+qop4[:,1])) > threshes)
-    marzNum  =  (np.abs(np.log(1+qop4[:,2]) - np.log(1+qop4[:,1])) > threshes)
-    runzXNum =  (np.abs(np.log(1+qop4[:,4]) - np.log(1+qop4[:,1])) > threshes)
-    runzENum =  (np.abs(np.log(1+qop4[:,5]) - np.log(1+qop4[:,1])) > threshes)
-    
-    autozNum2 = 100.0 * autozNum.sum() #/ qop4[:,1].size
-    marzNum2 = 100.0 * marzNum.sum() #/ qop4[:,1].size
-    runzxNum2 = 100.0 * runzXNum.sum() #/ qop4[:,1].size
-    runzeNum2 = 100.0 * runzENum.sum() #/ qop4[:,1].size
-    
-    autoz =  ((1 + qop4[:,3]) / (1 + qop4[:,1]))[autozNum]
-    marz  =  ((1 + qop4[:,2]) / (1 + qop4[:,1]))[marzNum]
-    runzx =  ((1 + qop4[:,4]) / (1 + qop4[:,1]))[runzXNum]
-    runze =  ((1 + qop4[:,5]) / (1 + qop4[:,1]))[runzENum]
-
-    msr = (100.0 * (1.0-(1.0*marz.size / qop4[:,0].size )))
-    asr = (100.0 * (1.0-(1.0*autoz.size / qop4[:,0].size )))
-    rxsr = (100.0 * (1.0-(1.0*runzx.size / qop4[:,0].size )))
-    resr = (100.0 * (1.0-(1.0*runze.size / qop4[:,0].size )))
-    print("marz %0.3f%% success rate, %0.3f%% fail rate" % (msr, 100 - msr))
-    print("autoz %0.3f%% success rate, %0.3f%% fail rate" % (asr, 100 - asr))
-    print("runzx %0.3f%% success rate, %0.3f%% fail rate" % (rxsr, 100 - rxsr))
-    print("runze %0.3f%% success rate, %0.3f%% fail rate" % (resr, 100 - resr))
+    qop44 = res[res[:,0] >= 4]
+    qop33 = res[res[:,0] >= 3]
     
     fig = plt.figure(figsize=(7,7), dpi=300)
     matplotlib.rcParams.update({'font.size': 12})
@@ -152,47 +119,89 @@ def plotErrorRate(res):
     ax3 = fig.add_subplot(gs[3], sharex=ax0)
     #ax4 = fig.add_subplot(gs[4], sharex=ax0)
     
-    bins = np.linspace(0.2,3,200)
-    width = 1 * (bins[1] - bins[0])
-    center = (bins[:-1] + bins[1:]) / 2
+    maxes = 100
     
-    hist0 = 100.0 * np.histogram(runzx, bins=bins)[0] / (qop4[:,0].size - runzXNum.sum())
-    hist1 = 100.0 * np.histogram(runze, bins=bins)[0] / (qop4[:,0].size - runzENum.sum())
-    hist2 = 100.0 * np.histogram(autoz, bins=bins)[0] / (qop4[:,0].size - autozNum.sum())
-    hist3 = 100.0 * np.histogram(marz,  bins=bins)[0] / (qop4[:,0].size - marzNum.sum())
-
-    maxes = max([max(hist0), max(hist1), max(hist2), max(hist3)])
-    
+    scale = 1    
     
     ax0.plot([mg2/c4]*2, [1.1 * maxes, 0], ':', color='#555555')
     ax1.plot([mg2/c4]*2, [1.1 * maxes, 0], ':', color='#555555')
     ax2.plot([mg2/c4]*2, [1.1 * maxes, 0], ':', color='#555555')
     ax3.plot([mg2/c4]*2, [1.1 * maxes, 0], ':', color='#555555')
-    ax2.text(1.54, 10, r'$\mathrm{MgII}\mathrm{/CIV}$', fontsize=14)
+    ax2.text(1.54, scale*3, r'$\mathrm{MgII}\mathrm{/CIV}$', fontsize=14)
     
     ax0.plot([o2/o3d, o2/o3d], [1.1 * maxes, 0], ':', color='#555555')
     ax1.plot([o2/o3d, o2/o3d], [1.1 * maxes, 0], ':', color='#555555')
     ax2.plot([o2/o3d, o2/o3d], [1.1 * maxes, 0], ':', color='#555555')
     ax3.plot([o2/o3d, o2/o3d], [1.1 * maxes, 0], ':', color='#555555')
-    ax2.text(0.5, 10, r'$\mathrm{O[II]/O[III]}$', fontsize=14)
+    ax2.text(0.5, scale*3, r'$\mathrm{O[II]/O[III]}$', fontsize=14)
     
     ax0.plot([mg2/halpha, mg2/halpha], [1.1 * maxes, 0], ':', color='#555555')
     ax1.plot([mg2/halpha, mg2/halpha], [1.1 * maxes, 0], ':', color='#555555')
     ax2.plot([mg2/halpha, mg2/halpha], [1.1 * maxes, 0], ':', color='#555555')
     ax3.plot([mg2/halpha, mg2/halpha], [1.1 * maxes, 0], ':', color='#555555')
-    ax0.text(0.2, 7.3, r'$\mathrm{MgII/H}\alpha$', fontsize=14)
+    ax0.text(0.2, scale*10, r'$\mathrm{MgII/H}\alpha$', fontsize=14)
 
     ax0.plot([halpha/mg2, halpha/mg2], [1.1 * maxes, 0], ':', color='#555555')
     ax1.plot([halpha/mg2, halpha/mg2], [1.1 * maxes, 0], ':', color='#555555')
     ax2.plot([halpha/mg2, halpha/mg2], [1.1 * maxes, 0], ':', color='#555555')
     ax3.plot([halpha/mg2, halpha/mg2], [1.1 * maxes, 0], ':', color='#555555')
-    ax1.text(2.2, 5, r'$\mathrm{H}\alpha\mathrm{/MgII}$', fontsize=14)
+    ax1.text(2.2, scale*1.6, r'$\mathrm{H}\alpha\mathrm{/MgII}$', fontsize=14)
     
-    a0 = ax0.bar(center, hist0, align='center', width=width, edgecolor="none", facecolor="#E53935", label="Runz xcor")
-    a1 = ax1.bar(center, hist1, align='center', width=width, edgecolor="none", facecolor="#AB47BC", label="Runz ELM")
-    a2 = ax2.bar(center, hist2, align='center', width=width, edgecolor="none", facecolor="#4CAF50", label="Autoz")
-    a3 = ax3.bar(center, hist3, align='center', width=width, edgecolor="none", facecolor="#2196F3", label="Marz")
+    maxes = []
+    for qop4, alpha in [(qop33, 0.2), (qop44, 1.0)]: #(qop33, 0.2)
+        qSelection = qop4[:,-1] == 12
+        qInvSelection = qSelection == False
+        thresh = 0.0015 * 4
+        threshQ = 1
+        threshes = thresh * (1 + qSelection * (threshQ - 1))
+        
+        autozNum =  (np.abs(np.log(1+qop4[:,3]) - np.log(1+qop4[:,1])) > threshes)
+        marzNum  =  (np.abs(np.log(1+qop4[:,2]) - np.log(1+qop4[:,1])) > threshes)
+        runzXNum =  (np.abs(np.log(1+qop4[:,4]) - np.log(1+qop4[:,1])) > threshes)
+        runzENum =  (np.abs(np.log(1+qop4[:,5]) - np.log(1+qop4[:,1])) > threshes)
+        
+        autozNum2 = autozNum.sum() #/ qop4[:,1].size
+        marzNum2 = marzNum.sum() #/ qop4[:,1].size
+        runzxNum2 = runzXNum.sum() #/ qop4[:,1].size
+        runzeNum2 = runzENum.sum() #/ qop4[:,1].size
+        print(autozNum2)
+        print(marzNum2)
+        print(runzxNum2)
+        autoz =  ((1 + qop4[:,3]) / (1 + qop4[:,1]))[autozNum]
+        marz  =  ((1 + qop4[:,2]) / (1 + qop4[:,1]))[marzNum]
+        runzx =  ((1 + qop4[:,4]) / (1 + qop4[:,1]))[runzXNum]
+        runze =  ((1 + qop4[:,5]) / (1 + qop4[:,1]))[runzENum]
     
+        msr = (100.0 * (1.0-(1.0*marz.size / qop4[:,0].size )))
+        asr = (100.0 * (1.0-(1.0*autoz.size / qop4[:,0].size )))
+        rxsr = (100.0 * (1.0-(1.0*runzx.size / qop4[:,0].size )))
+        resr = (100.0 * (1.0-(1.0*runze.size / qop4[:,0].size )))
+        print("marz %0.3f%% success rate, %0.3f%% fail rate" % (msr, 100 - msr))
+        print("autoz %0.3f%% success rate, %0.3f%% fail rate" % (asr, 100 - asr))
+        print("runzx %0.3f%% success rate, %0.3f%% fail rate" % (rxsr, 100 - rxsr))
+        print("runze %0.3f%% success rate, %0.3f%% fail rate" % (resr, 100 - resr))
+        
+        
+        
+        bins = np.linspace(0.2,3,200)
+        width = 1 * (bins[1] - bins[0])
+        center = (bins[:-1] + bins[1:]) / 2
+        
+        hist0 = 100.0 * np.histogram(runzx, bins=bins)[0] / (qop4[:,0].size - runzXNum.sum())
+        hist1 = 100.0 * np.histogram(runze, bins=bins)[0] / (qop4[:,0].size - runzENum.sum())
+        hist2 = 100.0 * np.histogram(autoz, bins=bins)[0] / (qop4[:,0].size - autozNum.sum())
+        hist3 = 100.0 * np.histogram(marz,  bins=bins)[0] / (qop4[:,0].size - marzNum.sum())
+    
+        maxes.append([max(hist0), max(hist1), max(hist2), max(hist3)])
+        
+        
+        
+        
+        a0 = ax0.bar(center, hist0, align='center', width=width, alpha=alpha, edgecolor="none", facecolor="#E53935", label="Runz xcor")
+        a1 = ax1.bar(center, hist1, align='center', width=width, alpha=alpha, edgecolor="none", facecolor="#AB47BC", label="Runz ELM")
+        a2 = ax2.bar(center, hist2, align='center', width=width, alpha=alpha, edgecolor="none", facecolor="#4CAF50", label="Autoz")
+        a3 = ax3.bar(center, hist3, align='center', width=width, alpha=alpha, edgecolor="none", facecolor="#2196F3", label="Marz")
+        
     
     #ax4.bar(center, hist0, align='center', width=width, edgecolor="none", facecolor="#E53935", label="Runz xcor")
     #ax4.bar(center, hist1, align='center', width=width, edgecolor="none", facecolor="#AB47BC", label="Runz ELM")
@@ -226,10 +235,12 @@ def plotErrorRate(res):
     
     xmax = 3
     xmin = 0.2
-    ax0.set_ylim(0, 1.1 * max(hist0))
-    ax1.set_ylim(0, 1.1 * max(hist1))
-    ax2.set_ylim(0, 1.1 * max(hist2))
-    ax3.set_ylim(0, 1.1 * max(hist3))
+    maxes = np.array(maxes)
+    maxes = np.max(maxes, axis=0)
+    ax0.set_ylim(0, 1.1 * maxes[0])
+    ax1.set_ylim(0, 1.1 * maxes[1])
+    ax2.set_ylim(0, 1.1 * maxes[2])
+    ax3.set_ylim(0, 1.1 * maxes[3])
     ax0.set_xlim(xmin, xmax)
     ax1.set_xlim(xmin, xmax)
     ax2.set_xlim(xmin, xmax)
@@ -242,13 +253,14 @@ def plotErrorRate(res):
     
     
     
-    figtext(0.03,0.7,r"probability to misidentify [%]", fontdict={'fontsize':15},rotation=90)
+    figtext(0.03,0.7,r"Probability to misidentify [%]", fontdict={'fontsize':15},rotation=90)
 
     
-    fig.savefig("errorRateqop3.png", bbox_inches='tight', dpi=100, transparent=True)
-    fig.savefig("errorRateqop3.pdf", bbox_inches='tight', transparent=True)
+    #fig.savefig("errorRateqop.png", bbox_inches='tight', dpi=100, transparent=True)
+    #fig.savefig("errorRateqop.pdf", bbox_inches='tight', transparent=True)
     
     
+
 #res = loadData()
 plotErrorRate(res)
 
