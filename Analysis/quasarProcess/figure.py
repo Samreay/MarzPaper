@@ -92,7 +92,7 @@ ax3.set_ylim(afterError.min(), afterError.max()*s)
 ax0.set_xlim(xmin, xmax)
 
 ax0.text(0.99 * xmax, -0.1 + max(initial), 'Starting spectrum', fontsize=14, horizontalalignment='right')
-ax1.text(0.99 * xmax, -0.1 + max(afterPoly), 'Aftter polynomial subtraction', fontsize=14, horizontalalignment='right')
+ax1.text(0.99 * xmax, -0.1 + max(afterPoly), 'After polynomial subtraction', fontsize=14, horizontalalignment='right')
 ax2.text(0.99 * xmax, -0.1 + max(afterSmooth), 'After tapering and smoothing of spectrum and variance', fontsize=14, horizontalalignment='right')
 ax3.text(0.99 * xmax, -0.1 + max(afterError), 'After division by variance', fontsize=14, horizontalalignment='right')
 ax3.set_xlabel("Wavelength (Å)".decode('utf-8'))
