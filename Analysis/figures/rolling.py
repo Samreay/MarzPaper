@@ -40,7 +40,7 @@ out = np.convolve(ys2, y, mode='same')
 out2 = np.convolve(ys2, y2, mode='same')
 
 ax1.plot(xs, ys,'k--',  linewidth=1, alpha=0.6, label="Signal")
-ax1.plot(xs,ys2, 'k', linewidth=1,  alpha=0.9, label="Sn+Noise")
+ax1.plot(xs,ys2, 'k', linewidth=1,  alpha=0.9, label="Signal+Noise")
 ax1.plot(xs, out, 'b-',  linewidth=1, label="Output")
 ax1.plot(xs, out2, 'r-', linewidth=1, label="Boxcar")
 

@@ -26,7 +26,7 @@ afterError /= (afterError.max() - afterError.min())
 
 z = 2.4793
 lines = np.array([1215.670, 1240.14, 1400.0, 1549.06,1908.73]) * (1 + z)
-lineLabels = [r'$\mathrm{Ly}_\alpha$', r'$\left[\mathrm{N}_\mathrm{V}\right]$', r'$\mathrm{Si}_4$', r'$\mathrm{C}_{\mathrm{IV}}$', r'$\mathrm{C}_{\mathrm{III}}$']
+lineLabels = [r'$\mathrm{Ly}_\alpha$', r'$\mathrm{N}_\mathrm{V}$', r'$\mathrm{Si}_{\mathrm{IV}}$', r'$\mathrm{C}_{\mathrm{IV}}$', r'$\left.\mathrm{C}_{\mathrm{III}}\right]$']
 
 
 
